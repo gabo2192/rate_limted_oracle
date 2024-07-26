@@ -1,0 +1,7 @@
+Aim: We would like to see how you approach writing smart contracts on Solana, and gain some insight into how you think about technical problems. Please complete the coding challenge below, and the follow-up design question.
+Time required: ~1 hour
+Rate limited update program
+Please write a simple smart contract program in Anchor Framework that comprises an oracle price update contract for an example asset. There is a public function that has rate limits built into it to ensure that the function can only be called 3 times per X period by any wallet, otherwise it should revert. After the period, the amount of available calls should go back to 3.  Period should be a variable in the contract (we assume it can be changed).
+Please keep security and gas efficiency in mind overall.
+
+When you are finished at the end of 1 hour, please push your code to github and send a link to the repo to our team.
