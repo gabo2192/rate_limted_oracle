@@ -19,3 +19,5 @@ Result:
 - We then check if the current time is greater than the last time called + the period, if it is we reset the number of calls to 0, otherwise we check the amount of calls and if there are more than 3 we revert.
 
 - Period is not a variable right now, I missed this part, but it can be easily added, we can have it set up on the oracle struct and have a function to update it.
+
+- I tested the contract using the anchor test command, I've only got to the first one.
