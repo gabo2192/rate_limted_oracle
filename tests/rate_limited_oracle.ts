@@ -76,4 +76,40 @@ describe("rate_limited_oracle", async () => {
     const state = await program.account.oracle.fetch(oraclePda);
     expect(state.period.toNumber()).to.equal(120);
   });
+  it("Fails to update the price!", async () => {
+    const [oraclePda] = await anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("oracle")],
+      program.programId
+    );
+    await program.methods
+      .updatePrice(new anchor.BN(100))
+      .accounts({
+        oracle: oraclePda,
+        user: user.publicKey,
+      })
+      .signers([user])
+      .rpc();
+    await program.methods
+      .updatePrice(new anchor.BN(120))
+      .accounts({
+        oracle: oraclePda,
+        user: user.publicKey,
+      })
+      .signers([user])
+      .rpc();
+    try {
+      await program.methods
+        .updatePrice(new anchor.BN(130))
+        .accounts({
+          oracle: oraclePda,
+          user: user.publicKey,
+        })
+        .signers([user])
+        .rpc();
+    } catch (err) {
+      expect(err.error.errorCode.code).to.equal("RateLimitExceeded");
+    }
+    const state = await program.account.oracle.fetch(oraclePda);
+    expect(state.price.toNumber()).to.equal(120);
+  });
 });
