@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 pub struct Oracle {
     pub price: u64,
     pub time: i64,
+    pub period: i64,
 }
 
 #[account]

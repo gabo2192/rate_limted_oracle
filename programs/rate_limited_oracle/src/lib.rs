@@ -7,7 +7,6 @@ use errors::ErrorCode;
 
 declare_id!("38uoZRhNUUrrbWpQutZ8fQhAQhZytFygVaqGrdjHDdUp");
 
-const PERIOD: i64 = 60; // 1 minute in seconds
 const MAX_CALLS: u8 = 3;
 
 #[program]
@@ -27,7 +26,7 @@ pub mod rate_limited_oracle {
         let rate_limit = &mut ctx.accounts.rate_limit;
         let current_time = Clock::get()?.unix_timestamp;
 
-        if current_time - rate_limit.last_called >= PERIOD {
+        if current_time - rate_limit.last_called >= oracle.period {
             rate_limit.calls = 0;
             rate_limit.last_called = current_time;
         }
@@ -43,6 +42,12 @@ pub mod rate_limited_oracle {
         rate_limit.last_called = current_time;
         rate_limit.calls += 1;
 
+        Ok(())
+    }
+
+    pub fn update_period(ctx: Context<UpdatePeriod>, new_period: i64) -> Result<()> {
+        let oracle = &mut ctx.accounts.oracle;
+        oracle.period = new_period;
         Ok(())
     }
 }
@@ -77,4 +82,12 @@ pub struct UpdatePrice<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct UpdatePeriod<'info> {
+    #[account(mut)]
+    pub oracle: Account<'info, Oracle>,
+    #[account(mut)]
+    pub user: Signer<'info>,
 }
