@@ -13,11 +13,12 @@ const MAX_CALLS: u8 = 3;
 pub mod rate_limited_oracle {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, new_period: i64) -> Result<()> {
         let oracle = &mut ctx.accounts.oracle;
         let current_time = Clock::get()?.unix_timestamp;
         oracle.time = current_time;
         oracle.price = 0;
+        oracle.period = new_period;
         Ok(())
     }
 
