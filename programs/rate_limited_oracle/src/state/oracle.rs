@@ -5,6 +5,7 @@ pub struct Oracle {
     pub price: u64,
     pub time: i64,
     pub period: i64,
+    pub admin: Pubkey,
 }
 
 #[account]

@@ -47,7 +47,7 @@ pub mod rate_limited_oracle {
     }
 
     pub fn update_period(ctx: Context<UpdatePeriod>, new_period: i64) -> Result<()> {
-        let oracle = &mut ctx.accounts.oracle;
+        let oracle: &mut Account<Oracle> = &mut ctx.accounts.oracle;
         oracle.period = new_period;
         Ok(())
     }
@@ -57,14 +57,14 @@ pub mod rate_limited_oracle {
 pub struct Initialize<'info> {
     #[account(
         init, 
-        payer = user, 
+        payer = admin, 
         space = 8 + std::mem::size_of::<Oracle>(),
         seeds = [b"oracle".as_ref()],
         bump
     )]
     pub oracle: Account<'info, Oracle>,
     #[account(mut)]
-    pub user: Signer<'info>,
+    pub admin: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
@@ -89,6 +89,9 @@ pub struct UpdatePrice<'info> {
 pub struct UpdatePeriod<'info> {
     #[account(mut)]
     pub oracle: Account<'info, Oracle>,
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = user.key() == oracle.admin
+    )]
     pub user: Signer<'info>,
 }
