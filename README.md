@@ -1,3 +1,31 @@
+## Quick Start
+
+1. **Install Dependencies**
+
+```sh
+# Install Latest Ancho CLI 0.30.1 and Solana Version 1.17.3
+https://www.anchor-lang.com/release-notes/0.30.1
+avm install 0.30.1
+solana-install init 1.18.17
+```
+
+```sh
+#Install project dependencies using yarn
+yarn install
+```
+
+2. **Build the program**
+
+```sh
+anchor build
+```
+
+3. **Run the tests**
+
+```sh
+anchor test
+```
+
 Oracle Rate Limit:
 
 Summary:
@@ -17,7 +45,5 @@ Result:
 - In this update function we create a PDA to keep track their last time called and the number of calls made in the last period.
 
 - We then check if the current time is greater than the last time called + the period, if it is we reset the number of calls to 0, otherwise we check the amount of calls and if there are more than 3 we revert.
-
-- Period is not a variable right now, I missed this part, but it can be easily added, we can have it set up on the oracle struct and have a function to update it.
 
 - I tested the contract using the anchor test command, I've only got to the first one.

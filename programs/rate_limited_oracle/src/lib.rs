@@ -1,9 +1,8 @@
-mod errors;
-mod state;
+pub mod errors;
+pub mod state;
 use anchor_lang::prelude::*;
 
-use crate::state::*;
-use errors::ErrorCode;
+use crate::{state::*, errors::*};
 
 declare_id!("38uoZRhNUUrrbWpQutZ8fQhAQhZytFygVaqGrdjHDdUp");
 
@@ -13,12 +12,13 @@ const MAX_CALLS: u8 = 3;
 pub mod rate_limited_oracle {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, new_period: i64) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, new_period: i64, new_price: u64) -> Result<()> {
         let oracle = &mut ctx.accounts.oracle;
         let current_time = Clock::get()?.unix_timestamp;
         oracle.time = current_time;
-        oracle.price = 0;
+        oracle.price = new_price;
         oracle.period = new_period;
+        oracle.admin = ctx.accounts.admin.key();
         Ok(())
     }
 
@@ -33,7 +33,7 @@ pub mod rate_limited_oracle {
         }
 
         if rate_limit.calls >= MAX_CALLS {
-            return Err(ErrorCode::RateLimitExceeded.into());
+            return Err(OracleError::RateLimitExceeded.into());
         }
 
         oracle.price = new_price;

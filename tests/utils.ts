@@ -15,3 +15,6 @@ function createKeypairFromFile(path: string): Keypair {
 export const user = createKeypairFromFile(
   path.resolve(__dirname, "./user.json")
 );
+export const user2 = createKeypairFromFile(
+  path.resolve(__dirname, "./user_2.json")
+);

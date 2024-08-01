@@ -1,7 +1,7 @@
-use anchor_lang::error_code;
+use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum ErrorCode {
+pub enum OracleError {
     #[msg("Rate limit exceeded")]
     RateLimitExceeded,
     #[msg("Unauthorized")]
